@@ -19,7 +19,7 @@ class _SignupPageState extends State<SignupPage> {
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage("assets/img.png"),
+                image: AssetImage("img/img.png"),
                 fit: BoxFit.cover,
               ),
             ),
@@ -49,7 +49,7 @@ class _SignupPageState extends State<SignupPage> {
                             height: 135,
                             decoration: const BoxDecoration(
                               image: DecorationImage(
-                                image: AssetImage("assets/img_1.png"),
+                                image: AssetImage("img/logo.png"),
                               ),
                             ),
                             child: const Padding(
