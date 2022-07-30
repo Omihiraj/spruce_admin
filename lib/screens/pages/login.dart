@@ -1,4 +1,5 @@
 import 'package:clean_admin/components/constants.dart';
+import 'package:clean_admin/screens/main_screen.dart';
 import 'package:clean_admin/screens/pages/sign_up.dart';
 import 'package:flutter/material.dart';
 
@@ -134,26 +135,32 @@ class _LoginPageState extends State<LoginPage> {
                       const SizedBox(
                         height: 24,
                       ),
-
                       const SizedBox(
                         height: 24,
                       ),
-                      // GestureDetector(
-                      //   onTap: (){
-                      //     Navigator.push(
-                      //         context,
-                      //         MaterialPageRoute(
-                      //           builder: (BuildContext context) => SideMenu(),
-                      //         ));
-                      //   },
-                      //   child: Container(
-
-                      //     height: 48,
-                      //     width: 316,
-                      //     color: primaryColor,
-                      //     child: const Center(child: Text('Log In',style: TextStyle(color: Colors.white, fontSize: 14, fontFamily: 'mulish'),)),
-                      //   ),
-                      // ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    const MainScreen(),
+                              ));
+                        },
+                        child: Container(
+                          height: 48,
+                          width: 316,
+                          color: primaryColor,
+                          child: const Center(
+                              child: Text(
+                            'Log In',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                                fontFamily: 'mulish'),
+                          )),
+                        ),
+                      ),
                       const SizedBox(
                         height: 32,
                       ),
