@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>100382217810-iqul4b3fe4kb729fr8duf8jvqifa9qkm.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.100382217810-iqul4b3fe4kb729fr8duf8jvqifa9qkm</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCb0nNmnbFb4HnK7ND21RH0iwJL5bdRdVw</string>
+	<key>GCM_SENDER_ID</key>
+	<string>100382217810</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.cleanAdmin</string>
+	<key>PROJECT_ID</key>
+	<string>spruce-clean</string>
+	<key>STORAGE_BUCKET</key>
+	<string>spruce-clean.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:100382217810:ios:481205baa71d977952318b</string>
+</dict>
+</plist>
