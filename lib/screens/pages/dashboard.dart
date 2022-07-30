@@ -60,7 +60,7 @@ class _DashboardState extends State<Dashboard> {
                               borderRadius: BorderRadius.circular(10)),
                           padding: const EdgeInsets.all(10),
                           child: const Text(
-                            "Check Summaryyyy",
+                            "Check Summary",
                             style: TextStyle(color: Colors.white),
                           ),
                         ),
