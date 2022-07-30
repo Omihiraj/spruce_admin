@@ -27,122 +27,150 @@ class _MainScreenState extends State<MainScreen> {
   final pageNo = PageModel();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: SafeArea(
-            child: Row(
-      children: [
-        Expanded(
-          child: Drawer(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  DrawerHeader(
-                    child: Image.asset("img/logo.png"),
-                  ),
-                  ListTile(
-                    leading: Icon(
-                      Icons.home_filled,
-                      color: Provider.of<PageModel>(context).getPageNo == 0
-                          ? Colors.white
-                          : secondaryColor,
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
+          body: SafeArea(
+              child: Row(
+        children: [
+          Expanded(
+            child: Drawer(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    DrawerHeader(
+                      child: Image.asset("img/logo.png"),
                     ),
-                    tileColor: Provider.of<PageModel>(context).getPageNo == 0
-                        ? primaryColor
-                        : Colors.white,
-                    onTap: () {
-                      Provider.of<PageModel>(context, listen: false)
-                          .currentPage(0);
-                    },
-                    horizontalTitleGap: 0,
-                    title: Text(
-                      "Dashboard",
-                      style: TextStyle(
+                    ListTile(
+                      leading: Icon(
+                        Icons.home_filled,
                         color: Provider.of<PageModel>(context).getPageNo == 0
                             ? Colors.white
                             : secondaryColor,
                       ),
+                      tileColor: Provider.of<PageModel>(context).getPageNo == 0
+                          ? primaryColor
+                          : Colors.white,
+                      onTap: () {
+                        Provider.of<PageModel>(context, listen: false)
+                            .currentPage(0);
+                      },
+                      horizontalTitleGap: 0,
+                      title: Text(
+                        "Dashboard",
+                        style: TextStyle(
+                          color: Provider.of<PageModel>(context).getPageNo == 0
+                              ? Colors.white
+                              : secondaryColor,
+                        ),
+                      ),
                     ),
-                  ),
-                  ListTile(
-                    leading: Icon(
-                      Icons.list_alt_rounded,
-                      color: Provider.of<PageModel>(context).getPageNo == 1
-                          ? Colors.white
-                          : secondaryColor,
-                    ),
-                    tileColor: Provider.of<PageModel>(context).getPageNo == 1
-                        ? primaryColor
-                        : Colors.white,
-                    onTap: () {
-                      Provider.of<PageModel>(context, listen: false)
-                          .currentPage(1);
-                    },
-                    horizontalTitleGap: 0,
-                    title: Text(
-                      "Orders",
-                      style: TextStyle(
+                    ListTile(
+                      leading: Icon(
+                        Icons.list_alt_rounded,
                         color: Provider.of<PageModel>(context).getPageNo == 1
                             ? Colors.white
                             : secondaryColor,
                       ),
+                      tileColor: Provider.of<PageModel>(context).getPageNo == 1
+                          ? primaryColor
+                          : Colors.white,
+                      onTap: () {
+                        Provider.of<PageModel>(context, listen: false)
+                            .currentPage(1);
+                      },
+                      horizontalTitleGap: 0,
+                      title: Text(
+                        "Orders",
+                        style: TextStyle(
+                          color: Provider.of<PageModel>(context).getPageNo == 1
+                              ? Colors.white
+                              : secondaryColor,
+                        ),
+                      ),
                     ),
-                  ),
-                  ListTile(
-                    leading: Icon(
-                      Icons.people,
-                      color: Provider.of<PageModel>(context).getPageNo == 2
-                          ? Colors.white
-                          : secondaryColor,
-                    ),
-                    tileColor: Provider.of<PageModel>(context).getPageNo == 2
-                        ? primaryColor
-                        : Colors.white,
-                    onTap: () {
-                      Provider.of<PageModel>(context, listen: false)
-                          .currentPage(2);
-                    },
-                    horizontalTitleGap: 0,
-                    title: Text(
-                      "Cleaners",
-                      style: TextStyle(
+                    ListTile(
+                      leading: Icon(
+                        Icons.people,
                         color: Provider.of<PageModel>(context).getPageNo == 2
                             ? Colors.white
                             : secondaryColor,
                       ),
+                      tileColor: Provider.of<PageModel>(context).getPageNo == 2
+                          ? primaryColor
+                          : Colors.white,
+                      onTap: () {
+                        Provider.of<PageModel>(context, listen: false)
+                            .currentPage(2);
+                      },
+                      horizontalTitleGap: 0,
+                      title: Text(
+                        "Cleaners",
+                        style: TextStyle(
+                          color: Provider.of<PageModel>(context).getPageNo == 2
+                              ? Colors.white
+                              : secondaryColor,
+                        ),
+                      ),
                     ),
-                  ),
-                  ListTile(
-                    leading: Icon(
-                      Icons.cleaning_services,
-                      color: Provider.of<PageModel>(context).getPageNo == 3
-                          ? Colors.white
-                          : secondaryColor,
-                    ),
-                    tileColor: Provider.of<PageModel>(context).getPageNo == 3
-                        ? primaryColor
-                        : Colors.white,
-                    onTap: () {
-                      Provider.of<PageModel>(context, listen: false)
-                          .currentPage(3);
-                    },
-                    horizontalTitleGap: 0,
-                    title: Text(
-                      "Services",
-                      style: TextStyle(
+                    ListTile(
+                      leading: Icon(
+                        Icons.cleaning_services,
                         color: Provider.of<PageModel>(context).getPageNo == 3
                             ? Colors.white
                             : secondaryColor,
                       ),
+                      tileColor: Provider.of<PageModel>(context).getPageNo == 3
+                          ? primaryColor
+                          : Colors.white,
+                      onTap: () {
+                        Provider.of<PageModel>(context, listen: false)
+                            .currentPage(3);
+                      },
+                      horizontalTitleGap: 0,
+                      title: Text(
+                        "Services",
+                        style: TextStyle(
+                          color: Provider.of<PageModel>(context).getPageNo == 3
+                              ? Colors.white
+                              : secondaryColor,
+                        ),
+                      ),
                     ),
-                  )
-                ],
+                    ListTile(
+                      leading: Icon(
+                        Icons.logout,
+                        color: Provider.of<PageModel>(context).getPageNo == 2
+                            ? Colors.white
+                            : secondaryColor,
+                      ),
+                      tileColor: Provider.of<PageModel>(context).getPageNo == 2
+                          ? primaryColor
+                          : Colors.white,
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      horizontalTitleGap: 0,
+                      title: Text(
+                        "Logout",
+                        style: TextStyle(
+                          color: Provider.of<PageModel>(context).getPageNo == 2
+                              ? Colors.white
+                              : secondaryColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-        Expanded(
-            flex: 5, child: pages[Provider.of<PageModel>(context).getPageNo])
-      ],
-    )));
+          Expanded(
+              flex: 5, child: pages[Provider.of<PageModel>(context).getPageNo])
+        ],
+      ))),
+    );
   }
 }

@@ -1,5 +1,5 @@
 name: clean_admin
-description: A new Flutter project.
+description: Admin Panel for Spruce.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
