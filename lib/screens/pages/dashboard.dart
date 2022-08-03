@@ -21,6 +21,7 @@ class _DashboardState extends State<Dashboard> {
     return Scaffold(
         backgroundColor: bgColor,
         appBar: AppBar(
+          leading: Container(),
           title: const Text(
             "Dashboard",
             style: TextStyle(

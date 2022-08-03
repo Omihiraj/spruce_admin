@@ -52,6 +52,7 @@ class _AddServiceState extends State<AddService> {
     return Scaffold(
       backgroundColor: bgColor,
       appBar: AppBar(
+        leading: Container(),
         title: const Text(
           "Add Service",
           style: TextStyle(

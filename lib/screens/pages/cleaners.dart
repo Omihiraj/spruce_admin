@@ -14,6 +14,7 @@ class _CleanersState extends State<Cleaners> {
     return Scaffold(
         backgroundColor: bgColor,
         appBar: AppBar(
+          leading: Container(),
           title: const Text(
             "Cleaners",
             style: TextStyle(

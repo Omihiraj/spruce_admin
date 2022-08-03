@@ -18,6 +18,7 @@ class _ServicesState extends State<Services> {
     return Scaffold(
       backgroundColor: bgColor,
       appBar: AppBar(
+        leading: Container(),
         title: const Text(
           "Services",
           style: TextStyle(

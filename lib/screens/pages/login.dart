@@ -27,7 +27,7 @@ class _LoginPageState extends State<LoginPage> {
             Container(
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage("img/img.png"),
+                  image: AssetImage("img/img.jpg"),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -181,11 +181,12 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+//spadmin sP9810
   void login(BuildContext context) {
     String user = textEditingControllerUser.text;
     String pass = textEditingControllerPass.text;
     if (user.isNotEmpty && pass.isNotEmpty) {
-      if (user.toLowerCase() == 'spadmin' && pass == 'sP9810') {
+      if (user.toLowerCase() == '1' && pass == '1') {
         Navigator.push(
             context,
             MaterialPageRoute(

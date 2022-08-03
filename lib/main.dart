@@ -1,6 +1,5 @@
 import 'package:clean_admin/controller/page_controller.dart';
 import 'package:clean_admin/firebase_options.dart';
-import 'package:clean_admin/screens/main_screen.dart';
 import 'package:clean_admin/screens/pages/login.dart';
 
 import 'package:firebase_core/firebase_core.dart';

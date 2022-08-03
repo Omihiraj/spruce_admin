@@ -140,25 +140,19 @@ class _MainScreenState extends State<MainScreen> {
                       ),
                     ),
                     ListTile(
-                      leading: Icon(
+                      leading: const Icon(
                         Icons.logout,
-                        color: Provider.of<PageModel>(context).getPageNo == 2
-                            ? Colors.white
-                            : secondaryColor,
+                        color: secondaryColor,
                       ),
-                      tileColor: Provider.of<PageModel>(context).getPageNo == 2
-                          ? primaryColor
-                          : Colors.white,
+                      tileColor: Colors.white,
                       onTap: () {
                         Navigator.pop(context);
                       },
                       horizontalTitleGap: 0,
-                      title: Text(
+                      title: const Text(
                         "Logout",
                         style: TextStyle(
-                          color: Provider.of<PageModel>(context).getPageNo == 2
-                              ? Colors.white
-                              : secondaryColor,
+                          color: secondaryColor,
                         ),
                       ),
                     ),

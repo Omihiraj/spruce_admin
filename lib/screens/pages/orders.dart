@@ -19,6 +19,7 @@ class _OrdersState extends State<Orders> {
         child: Scaffold(
             backgroundColor: Colors.white,
             appBar: AppBar(
+              leading: Container(),
               backgroundColor: Colors.white,
               elevation: 0,
               bottom: const TabBar(
@@ -33,10 +34,10 @@ class _OrdersState extends State<Orders> {
                       text: "Accept",
                     ),
                     Tab(
-                      text: "Completed",
+                      text: "Reject",
                     ),
                     Tab(
-                      text: "Reject",
+                      text: "Completed",
                     ),
                   ]),
             ),
@@ -68,9 +69,61 @@ class _OrdersState extends State<Orders> {
                   }
                 },
               ),
-              const Center(child: Text("A")),
-              const Center(child: Text("B")),
-              const Center(child: Text("C")),
+              StreamBuilder<List<Book>>(
+                stream: FireService.getAcceptBooks(),
+                builder: (context, snapshot) {
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.waiting:
+                      return const Center(child: CircularProgressIndicator());
+                    default:
+                      if (snapshot.hasError) {
+                        return Center(child: Text('Error: ${snapshot.error}'));
+                      } else {
+                        if (snapshot.data == null) {
+                          return const Text('No data to show');
+                        } else {
+                          final bookings = snapshot.data!;
+
+                          return ListView.builder(
+                            controller: ScrollController(),
+                            itemCount: bookings.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return builtService(bookings[index]);
+                            },
+                          );
+                        }
+                      }
+                  }
+                },
+              ),
+              StreamBuilder<List<Book>>(
+                stream: FireService.getRejectBooks(),
+                builder: (context, snapshot) {
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.waiting:
+                      return const Center(child: CircularProgressIndicator());
+                    default:
+                      if (snapshot.hasError) {
+                        return Center(child: Text('Error: ${snapshot.error}'));
+                      } else {
+                        if (snapshot.data == null) {
+                          return const Text('No data to show');
+                        } else {
+                          final bookings = snapshot.data!;
+
+                          return ListView.builder(
+                            controller: ScrollController(),
+                            itemCount: bookings.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return builtService(bookings[index]);
+                            },
+                          );
+                        }
+                      }
+                  }
+                },
+              ),
+              const Center(child: Text("Completed")),
             ])));
   }
 
@@ -114,7 +167,7 @@ class _OrdersState extends State<Orders> {
                         book.serviceName,
                         style: const TextStyle(
                             fontSize: 32,
-                            color: Colors.lightGreen,
+                            color: primaryColor,
                             fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -130,31 +183,31 @@ class _OrdersState extends State<Orders> {
                       children: [
                         const Icon(
                           Icons.bed,
-                          color: Colors.lightGreen,
+                          color: primaryColor,
                         ),
                         Text(
                           book.beds.toString(),
                           style: const TextStyle(
-                              color: Colors.purple, fontSize: 20),
+                              color: secondaryColor, fontSize: 20),
                         ),
                         const SizedBox(
                           width: 50,
                         ),
                         const Icon(Icons.timelapse_rounded,
-                            color: Colors.lightGreen),
+                            color: primaryColor),
                         Text(
                           "${book.hours} hrs",
                           style: const TextStyle(
-                              color: Colors.purple, fontSize: 20),
+                              color: secondaryColor, fontSize: 20),
                         ),
                         const SizedBox(
                           width: 50,
                         ),
-                        const Icon(Icons.people, color: Colors.lightGreen),
+                        const Icon(Icons.people, color: primaryColor),
                         Text(
                           "${book.cleaners}",
                           style: const TextStyle(
-                              color: Colors.purple, fontSize: 20),
+                              color: secondaryColor, fontSize: 20),
                         ),
                         InkWell(
                           onTap: () {
@@ -262,7 +315,11 @@ class _OrdersState extends State<Orders> {
                 Column(
                   children: [
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        //If status 0==Pending ,1==Accept ,2== Reject ,3==Complted
+                        FireService.updateOrderStatus(
+                            status: 1, docId: book.bookingId, context: context);
+                      },
                       child: Container(
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
@@ -285,7 +342,11 @@ class _OrdersState extends State<Orders> {
                     ),
                     const SizedBox(height: 5),
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        //If status 0==Pending ,1==Accept ,2== Reject ,3==Complted
+                        FireService.updateOrderStatus(
+                            status: 2, docId: book.bookingId, context: context);
+                      },
                       child: Container(
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(

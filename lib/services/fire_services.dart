@@ -112,12 +112,14 @@
 
 import 'dart:typed_data';
 
+import 'package:clean_admin/components/constants.dart';
 import 'package:clean_admin/models/book.dart';
 import 'package:clean_admin/models/location_add.dart';
 import 'package:clean_admin/models/service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 class FireService {
   static Stream<List<Service>> getServices() => FirebaseFirestore.instance
@@ -128,6 +130,20 @@ class FireService {
 
   static Stream<List<Book>> getBooks() => FirebaseFirestore.instance
       .collection("booking")
+      .snapshots()
+      .map((snapshot) =>
+          snapshot.docs.map((doc) => Book.fromJson(doc.data())).toList());
+
+  static Stream<List<Book>> getAcceptBooks() => FirebaseFirestore.instance
+      .collection("booking")
+      .where("status", isEqualTo: 1)
+      .snapshots()
+      .map((snapshot) =>
+          snapshot.docs.map((doc) => Book.fromJson(doc.data())).toList());
+
+  static Stream<List<Book>> getRejectBooks() => FirebaseFirestore.instance
+      .collection("booking")
+      .where("status", isEqualTo: 2)
       .snapshots()
       .map((snapshot) =>
           snapshot.docs.map((doc) => Book.fromJson(doc.data())).toList());
@@ -155,5 +171,51 @@ class FireService {
         Service(id: serviceId, img: img, name: serviceName, price: price);
     final json1 = serviceItem.toJson();
     await service.set(json1);
+  }
+
+  static Future updateOrderStatus(
+      {required int status, required String docId, required context}) {
+    CollectionReference bookItem =
+        FirebaseFirestore.instance.collection('booking');
+
+    return bookItem
+        .doc(docId)
+        .update({'status': status})
+        .then((value) => showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: status == 1
+                    ? const Text(
+                        'This Booking is Accepted',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: primaryColor),
+                      )
+                    : const Text(
+                        'This Booking is Rejected',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.redAccent),
+                      ),
+                content: SizedBox(
+                  width: 300,
+                  height: 300,
+                  child: ListView(
+                    controller: ScrollController(),
+                    children: [
+                      status == 1
+                          ? Lottie.asset(
+                              "anim/success.json",
+                              repeat: false,
+                            )
+                          : Lottie.asset(
+                              "anim/reject.json",
+                              repeat: false,
+                            ),
+                    ],
+                  ),
+                ),
+              );
+            }))
+        .catchError((error) => print("Failed to update user: $error"));
   }
 }
