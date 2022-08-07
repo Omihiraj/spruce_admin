@@ -1,7 +1,8 @@
 import 'package:clean_admin/components/constants.dart';
 import 'package:clean_admin/models/book.dart';
+import 'package:clean_admin/models/cleaner.dart';
 import 'package:clean_admin/services/fire_services.dart';
-
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter/material.dart';
 
 class Orders extends StatefulWidget {
@@ -172,7 +173,7 @@ class _OrdersState extends State<Orders> {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    Text("\$ ${book.price}.00",
+                    Text("AED ${book.price}.00",
                         style: const TextStyle(
                           color: Colors.red,
                           fontWeight: FontWeight.w500,
@@ -275,16 +276,91 @@ class _OrdersState extends State<Orders> {
                     SizedBox(
                       width: 300,
                       height: 100,
-                      child: ListView.builder(
-                        controller: ScrollController(),
-                        itemCount: 15,
-                        itemBuilder: (BuildContext context, int index) {
-                          return ListTile(
-                            title: Text('Cleaner $index'),
-                            trailing: const Icon(Icons.add_box_outlined),
-                          );
-                        },
-                      ),
+                      child: StreamBuilder<List<Cleaner>>(
+                          stream: FireService.getBookCleaners(book.bookingId),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                  child: SpinKitWave(
+                                color: secondaryColor,
+                                size: 25.0,
+                              ));
+                            } else if (!snapshot.hasData) {
+                              return const Center(
+                                child: Text("Noo"),
+                              );
+                            } else if (snapshot.hasError) {
+                              return Center(
+                                  child: Text('Error: ${snapshot.error}'));
+                            }
+                            final bookCleaners = snapshot.data!;
+                            if (bookCleaners.isEmpty) {
+                              return const Center(
+                                child: Text(
+                                  "Please Assign Cleaners!",
+                                  style: TextStyle(
+                                      color: Colors.redAccent,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              );
+                            }
+                            return ListView.builder(
+                              controller: ScrollController(),
+                              itemCount: bookCleaners.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return ListTile(
+                                  title: Text(bookCleaners[index].cleanerName),
+                                  trailing: IconButton(
+                                      onPressed: () {
+                                        FireService.updateBookCleaner(
+                                            bookingId: null,
+                                            cleanerId:
+                                                bookCleaners[index].cleanerId,
+                                            status: true,
+                                            context: context);
+                                      },
+                                      icon: const Icon(Icons.close,
+                                          color: Colors.redAccent)),
+                                );
+                              },
+                            );
+
+                            // switch (snapshot.connectionState) {
+                            //   case ConnectionState.waiting:
+                            //     return const Center(
+                            //         child: SpinKitWave(
+                            //       color: secondaryColor,
+                            //       size: 25.0,
+                            //     ));
+
+                            //   default:
+                            //     if (snapshot.hasError) {
+                            //       return Center(
+                            //           child: Text('Error: ${snapshot.error}'));
+                            //     } else {
+                            //       if (snapshot.data == null) {
+                            //         return const Text('No data to show');
+                            //       } else {
+                            //         final bookCleaners = snapshot.data!;
+
+                            //         return ListView.builder(
+                            //           controller: ScrollController(),
+                            //           itemCount: bookCleaners.length,
+                            //           itemBuilder:
+                            //               (BuildContext context, int index) {
+                            //             return ListTile(
+                            //               title: Text(
+                            //                   bookCleaners[index].cleanerName),
+                            //               trailing: const Icon(
+                            //                   Icons.add_box_outlined),
+                            //             );
+                            //           },
+                            //         );
+                            //       }
+                            //     }
+                            // }
+                          }),
                     ),
                     InkWell(
                       onTap: () {
@@ -296,7 +372,8 @@ class _OrdersState extends State<Orders> {
                                   'Assign Cleaner',
                                   style: TextStyle(color: primaryColor),
                                 ),
-                                content: setupAlertDialoadContainer(context),
+                                content: setupAlertDialoadContainer(
+                                    context, book.bookingId),
                               );
                             });
                       },
@@ -305,7 +382,7 @@ class _OrdersState extends State<Orders> {
                         child: Row(
                           children: const [
                             Text("Assign Cleaners"),
-                            Icon(Icons.add_box),
+                            Icon(Icons.add_box_outlined)
                           ],
                         ),
                       ),
@@ -375,22 +452,66 @@ class _OrdersState extends State<Orders> {
     );
   }
 
-  Widget setupAlertDialoadContainer(context) {
+  Widget setupAlertDialoadContainer(context, String bookId) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         SizedBox(
           height: 300.0,
           width: 300.0,
-          child: ListView.builder(
-            itemCount: 15,
-            itemBuilder: (BuildContext context, int index) {
-              return ListTile(
-                title: Text('Cleaner $index'),
-                trailing: const Icon(Icons.add_box_outlined),
-              );
-            },
-          ),
+          child: StreamBuilder<List<Cleaner>>(
+              stream: FireService.getOnlineCleaners(),
+              builder: (context, snapshot) {
+                switch (snapshot.connectionState) {
+                  case ConnectionState.waiting:
+                    return const Center(child: CircularProgressIndicator());
+                  default:
+                    if (snapshot.hasError) {
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    } else {
+                      if (snapshot.data == null) {
+                        return const Text('No data to show');
+                      } else {
+                        final cleaner = snapshot.data!;
+                        return ListView.builder(
+                          controller: ScrollController(),
+                          itemCount: cleaner.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Container(
+                              margin: const EdgeInsets.only(bottom: 10),
+                              child: ListTile(
+                                tileColor: bgColor,
+                                leading: Container(
+                                  width: 10,
+                                  height: 10,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: cleaner[index].status != null &&
+                                            cleaner[index].status == true
+                                        ? Colors.green
+                                        : Colors.redAccent,
+                                  ),
+                                ),
+                                title: Text(cleaner[index].cleanerName),
+                                subtitle: Text(cleaner[index].serviceName),
+                                trailing: IconButton(
+                                    
+                                    onPressed: () {
+                                      FireService.updateBookCleaner(
+                                          bookingId: bookId,
+                                          cleanerId: cleaner[index].cleanerId,
+                                          status: false,
+                                          context: context);
+                                    },
+                                    icon: const Icon(Icons.add_box_outlined)),
+                              ),
+                            );
+                          },
+                        );
+                      }
+                    }
+                }
+              }),
         ),
         Align(
           alignment: Alignment.bottomRight,

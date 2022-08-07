@@ -15,6 +15,15 @@ void main() async {
     create: (context) => PageModel(),
     builder: (context, child) => const MyApp(),
   ));
+  // runApp(
+  //   MultiProvider(
+  //     providers: [
+  //       ChangeNotifierProvider(create: (context) => PageModel()),
+  //       //ChangeNotifierProvider(create: (context) => PageModel()),
+  //     ],
+  //     child: const MyApp(),
+  //   ),
+  // );
 }
 
 class MyApp extends StatelessWidget {

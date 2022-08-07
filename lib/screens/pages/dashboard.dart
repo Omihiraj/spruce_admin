@@ -75,9 +75,9 @@ class _DashboardState extends State<Dashboard> {
                 ),
                 Row(
                   children: [
-                    comp('Orders', 'img/img_5.png', 10),
-                    comp('Total Income', 'img/img_5.png', 12),
-                    comp('Profit', 'img/img_5.png', 24),
+                    comp('Orders', 'img/img_5.png', 10, context),
+                    comp('Total Income', 'img/img_5.png', 12, context),
+                    comp('Profit', 'img/img_5.png', 24, context),
                   ],
                 ),
               ],
@@ -87,65 +87,70 @@ class _DashboardState extends State<Dashboard> {
   }
 }
 
-comp(var title, var icon, var count) {
+comp(var title, var icon, var count, context) {
   return Padding(
     padding: const EdgeInsets.only(left: 31.0, top: 40.0, right: 4.0),
-    child: Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2), //color of shadow
-            spreadRadius: 7,
-            blurRadius: 10,
-            offset: const Offset(1, 3),
-          ),
-        ],
-      ),
-      height: 160,
-      width: 250,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 22.0, left: 30.0),
-            child: Text(
-              title,
-              style: const TextStyle(fontSize: 18, color: Color(0xFF7D7D7D)),
+    child: InkWell(
+      onTap: () {
+        Provider.of<PageModel>(context, listen: false).currentPage(5);
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2), //color of shadow
+              spreadRadius: 7,
+              blurRadius: 10,
+              offset: const Offset(1, 3),
             ),
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 30, top: 15),
-                child: Text(
-                  count.toString(),
-                  style: const TextStyle(
-                      fontSize: 65,
-                      fontWeight: FontWeight.w700,
-                      color: primaryColor),
-                ),
+          ],
+        ),
+        height: 160,
+        width: 250,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 22.0, left: 30.0),
+              child: Text(
+                title,
+                style: const TextStyle(fontSize: 18, color: Color(0xFF7D7D7D)),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 70, top: 15),
-                child: Container(
-                  height: 50,
-                  width: 50,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(icon),
-                      fit: BoxFit.cover,
-                    ),
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 30, top: 15),
+                  child: Text(
+                    count.toString(),
+                    style: const TextStyle(
+                        fontSize: 65,
+                        fontWeight: FontWeight.w700,
+                        color: primaryColor),
                   ),
                 ),
-              )
-            ],
-          ),
-        ],
+                Padding(
+                  padding: const EdgeInsets.only(left: 70, top: 15),
+                  child: Container(
+                    height: 50,
+                    width: 50,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage(icon),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ],
+        ),
       ),
     ),
   );

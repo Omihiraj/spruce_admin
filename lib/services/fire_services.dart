@@ -114,6 +114,7 @@ import 'dart:typed_data';
 
 import 'package:clean_admin/components/constants.dart';
 import 'package:clean_admin/models/book.dart';
+import 'package:clean_admin/models/cleaner.dart';
 import 'package:clean_admin/models/location_add.dart';
 import 'package:clean_admin/models/service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -127,6 +128,17 @@ class FireService {
       .snapshots()
       .map((snapshot) =>
           snapshot.docs.map((doc) => Service.fromJson(doc.data())).toList());
+  static Stream<List<Cleaner>> getCleaners() => FirebaseFirestore.instance
+      .collection('cleaners')
+      .snapshots()
+      .map((snapshot) =>
+          snapshot.docs.map((doc) => Cleaner.fromJson(doc.data())).toList());
+  static Stream<List<Cleaner>> getOnlineCleaners() => FirebaseFirestore.instance
+      .collection('cleaners')
+      .where("status", isEqualTo: true)
+      .snapshots()
+      .map((snapshot) =>
+          snapshot.docs.map((doc) => Cleaner.fromJson(doc.data())).toList());
 
   static Stream<List<Book>> getBooks() => FirebaseFirestore.instance
       .collection("booking")
@@ -173,6 +185,53 @@ class FireService {
     await service.set(json1);
   }
 
+  static Future addCleaner({
+    required BuildContext context,
+    required cleanerName,
+    required serviceName,
+    required cleanerAddress,
+    required cleanerMobile,
+  }) async {
+    final String cleanerId =
+        FirebaseFirestore.instance.collection("cleaners").doc().id;
+    final cleaner =
+        FirebaseFirestore.instance.collection("cleaners").doc(cleanerId);
+    final cleanerItem = Cleaner(
+        cleanerName: cleanerName,
+        serviceName: serviceName,
+        cleanerAddress: cleanerAddress,
+        cleanerMobile: cleanerMobile,
+        cleanerId: cleanerId);
+    final json = cleanerItem.toJson();
+    await cleaner
+        .set(json)
+        .then((value) => showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text(
+                  'Service Added Successfully',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: primaryColor),
+                ),
+                content: SizedBox(
+                  width: 300,
+                  height: 300,
+                  child: ListView(
+                    controller: ScrollController(),
+                    children: [
+                      Lottie.asset(
+                        "anim/success.json",
+                        repeat: false,
+                      )
+                    ],
+                  ),
+                ),
+              );
+            }))
+        .catchError((error) => print("Failed to update user: $error"));
+  }
+
   static Future updateOrderStatus(
       {required int status, required String docId, required context}) {
     CollectionReference bookItem =
@@ -216,6 +275,29 @@ class FireService {
                 ),
               );
             }))
+        .catchError((error) => print("Failed to update user: $error"));
+  }
+
+  static Stream<List<Cleaner>> getBookCleaners(String id) => FirebaseFirestore
+      .instance
+      .collection("cleaners")
+      .where("current-booking-id", isEqualTo: id)
+      .snapshots()
+      .map((snapshot) =>
+          snapshot.docs.map((doc) => Cleaner.fromJson(doc.data())).toList());
+
+  static Future updateBookCleaner(
+      {required String cleanerId,
+      required String? bookingId,
+      required bool status,
+      required context}) {
+    CollectionReference updateItem =
+        FirebaseFirestore.instance.collection('cleaners');
+
+    return updateItem
+        .doc(cleanerId)
+        .update({'current-booking-id': bookingId, 'status': status})
+        .then((value) => print("Added Success"))
         .catchError((error) => print("Failed to update user: $error"));
   }
 }

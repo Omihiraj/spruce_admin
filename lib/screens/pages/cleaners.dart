@@ -1,4 +1,6 @@
 import 'package:clean_admin/components/constants.dart';
+import 'package:clean_admin/models/cleaner.dart';
+import 'package:clean_admin/services/fire_services.dart';
 import 'package:flutter/material.dart';
 
 class Cleaners extends StatefulWidget {
@@ -9,6 +11,20 @@ class Cleaners extends StatefulWidget {
 }
 
 class _CleanersState extends State<Cleaners> {
+  TextEditingController cleanerName = TextEditingController();
+  TextEditingController cleanerAddress = TextEditingController();
+  TextEditingController cleanerService = TextEditingController();
+  TextEditingController cleanerMobile = TextEditingController();
+  @override
+  void dispose() {
+    cleanerName.dispose();
+    cleanerAddress.dispose();
+    cleanerService.dispose();
+    cleanerMobile.dispose();
+    // TODO: implement dispose
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,6 +58,7 @@ class _CleanersState extends State<Cleaners> {
                                 controller: ScrollController(),
                                 children: [
                                   TextField(
+                                    controller: cleanerName,
                                     decoration: InputDecoration(
                                         label: const Text("Cleaner Name"),
                                         border: OutlineInputBorder(
@@ -53,6 +70,7 @@ class _CleanersState extends State<Cleaners> {
                                     height: 10,
                                   ),
                                   TextField(
+                                    controller: cleanerService,
                                     decoration: InputDecoration(
                                         label: const Text("Service Name"),
                                         border: OutlineInputBorder(
@@ -64,6 +82,7 @@ class _CleanersState extends State<Cleaners> {
                                     height: 10,
                                   ),
                                   TextField(
+                                    controller: cleanerAddress,
                                     decoration: InputDecoration(
                                         label: const Text("Address"),
                                         border: OutlineInputBorder(
@@ -75,6 +94,7 @@ class _CleanersState extends State<Cleaners> {
                                     height: 10,
                                   ),
                                   TextField(
+                                    controller: cleanerMobile,
                                     decoration: InputDecoration(
                                         label: const Text("Mobile No"),
                                         border: OutlineInputBorder(
@@ -86,6 +106,16 @@ class _CleanersState extends State<Cleaners> {
                                     alignment: Alignment.bottomRight,
                                     child: TextButton(
                                       onPressed: () {
+                                        FireService.addCleaner(
+                                            context: context,
+                                            cleanerName:
+                                                cleanerName.text.trim(),
+                                            serviceName:
+                                                cleanerService.text.trim(),
+                                            cleanerAddress:
+                                                cleanerAddress.text.trim(),
+                                            cleanerMobile:
+                                                cleanerMobile.text.trim());
                                         Navigator.pop(context);
                                       },
                                       child: const Text("Submit"),
@@ -118,18 +148,38 @@ class _CleanersState extends State<Cleaners> {
           elevation: 0,
           backgroundColor: bgColor,
         ),
-        body: ListView(children: const [
-          SizedBox(
-            height: 20,
-          ),
-          CleanerItem(
-            name: "name",
-            address: "address",
-            service: "service",
-            mobileNo: "mobileNo",
-            status: true,
-          ),
-        ]));
+        body: StreamBuilder<List<Cleaner>>(
+            stream: FireService.getCleaners(),
+            builder: (context, snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.waiting:
+                  return const Center(child: CircularProgressIndicator());
+                default:
+                  if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else {
+                    if (snapshot.data == null) {
+                      return const Text('No data to show');
+                    } else {
+                      final bookings = snapshot.data!;
+
+                      return ListView.builder(
+                        controller: ScrollController(),
+                        itemCount: bookings.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final cleaner = snapshot.data![index];
+                          return CleanerItem(
+                              name: cleaner.cleanerName,
+                              address: cleaner.cleanerAddress,
+                              service: cleaner.serviceName,
+                              mobileNo: cleaner.cleanerMobile,
+                              status: cleaner.status!);
+                        },
+                      );
+                    }
+                  }
+              }
+            }));
   }
 }
 
@@ -151,7 +201,7 @@ class CleanerItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
+      padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(boxShadow: const [

@@ -151,7 +151,7 @@ class _ServicesState extends State<Services> {
                             fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 10),
-                      Text("\$${service.price}/h",
+                      Text("AED${service.price}/h",
                           style: const TextStyle(
                             fontSize: 32,
                             fontWeight: FontWeight.bold,
