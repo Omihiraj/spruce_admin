@@ -4,7 +4,7 @@ import 'package:clean_admin/screens/pages/Services.dart';
 import 'package:clean_admin/screens/pages/add_service.dart';
 import 'package:clean_admin/screens/pages/cleaners.dart';
 import 'package:clean_admin/screens/pages/dashboard.dart';
-import 'package:clean_admin/screens/pages/date_service.dart';
+
 import 'package:clean_admin/screens/pages/orders.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -24,7 +24,6 @@ class _MainScreenState extends State<MainScreen> {
     const Cleaners(),
     const Services(),
     const AddService(),
-    const DateOrders(),
   ];
   final pageNo = PageModel();
   @override

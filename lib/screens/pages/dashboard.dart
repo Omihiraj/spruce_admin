@@ -75,9 +75,9 @@ class _DashboardState extends State<Dashboard> {
                 ),
                 Row(
                   children: [
-                    comp('Orders', 'img/img_5.png', 10, context),
-                    comp('Total Income', 'img/img_5.png', 12, context),
-                    comp('Profit', 'img/img_5.png', 24, context),
+                    compOrder('Orders', 'img/img_5.png', 10, context),
+                    comp('Daily Income', 'img/img_5.png', 12, context),
+                    comp('Monthly Income', 'img/img_5.png', 24, context),
                   ],
                 ),
               ],
@@ -85,6 +85,88 @@ class _DashboardState extends State<Dashboard> {
           },
         ));
   }
+}
+
+compOrder(var title, var icon, var count, context) {
+  return Padding(
+    padding: const EdgeInsets.only(left: 31.0, top: 40.0, right: 4.0),
+    child: InkWell(
+      onTap: () {
+        Provider.of<PageModel>(context, listen: false).currentPage(5);
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2), //color of shadow
+              spreadRadius: 7,
+              blurRadius: 10,
+              offset: const Offset(1, 3),
+            ),
+          ],
+        ),
+        height: 160,
+        width: 250,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 22.0, left: 30.0),
+              child: Text(
+                title,
+                style: const TextStyle(fontSize: 18, color: Color(0xFF7D7D7D)),
+              ),
+            ),
+            Padding(
+                padding: const EdgeInsets.only(left: 30, top: 15, right: 30),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: const [
+                        Text(
+                          "Completed Orders",
+                          style: TextStyle(color: primaryColor),
+                        ),
+                        Text("05")
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: const [
+                        Text(
+                          "Active Orders",
+                          style: TextStyle(color: primaryColor),
+                        ),
+                        Text("08")
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: const [
+                        Text(
+                          "Rejected Orders",
+                          style: TextStyle(color: primaryColor),
+                        ),
+                        Text("02")
+                      ],
+                    )
+                  ],
+                )),
+          ],
+        ),
+      ),
+    ),
+  );
 }
 
 comp(var title, var icon, var count, context) {

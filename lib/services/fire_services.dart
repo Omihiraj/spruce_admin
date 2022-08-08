@@ -128,6 +128,7 @@ class FireService {
       .snapshots()
       .map((snapshot) =>
           snapshot.docs.map((doc) => Service.fromJson(doc.data())).toList());
+
   static Stream<List<Cleaner>> getCleaners() => FirebaseFirestore.instance
       .collection('cleaners')
       .snapshots()
@@ -140,11 +141,23 @@ class FireService {
       .map((snapshot) =>
           snapshot.docs.map((doc) => Cleaner.fromJson(doc.data())).toList());
 
-  static Stream<List<Book>> getBooks() => FirebaseFirestore.instance
-      .collection("booking")
-      .snapshots()
-      .map((snapshot) =>
-          snapshot.docs.map((doc) => Book.fromJson(doc.data())).toList());
+  static Stream<List<Book>> getBooks(
+      {required Timestamp sTime,
+      required Timestamp eTime,
+      required bool mode}) {
+    if (!mode) {
+      return FirebaseFirestore.instance
+          .collection("booking")
+          .where('date', isGreaterThan: sTime)
+          .where('date', isLessThan: eTime)
+          .snapshots()
+          .map((snapshot) =>
+              snapshot.docs.map((doc) => Book.fromJson(doc.data())).toList());
+    }
+    return FirebaseFirestore.instance.collection("booking").snapshots().map(
+        (snapshot) =>
+            snapshot.docs.map((doc) => Book.fromJson(doc.data())).toList());
+  }
 
   static Stream<List<Book>> getAcceptBooks() => FirebaseFirestore.instance
       .collection("booking")

@@ -2,6 +2,7 @@ import 'package:clean_admin/components/constants.dart';
 import 'package:clean_admin/models/book.dart';
 import 'package:clean_admin/models/cleaner.dart';
 import 'package:clean_admin/services/fire_services.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter/material.dart';
 
@@ -13,8 +14,25 @@ class Orders extends StatefulWidget {
 }
 
 class _OrdersState extends State<Orders> {
+  // Timestamp.fromDate(DateTime.parse(selectDate! + " " + selectTime!)),
+  bool defaultMode = true;
+  String? sTimeDate;
+  String? eTimeDate;
+  DateTime date =
+      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+  TimeOfDay sTime = TimeOfDay(hour: 07, minute: 30);
+  TimeOfDay eTime = TimeOfDay(hour: 20, minute: 30);
   @override
   Widget build(BuildContext context) {
+    String month = date.month.toString().padLeft(2, '0');
+    String day = date.day.toString().padLeft(2, '0');
+
+    String sHour = sTime.hour.toString().padLeft(2, '0');
+    String sMinute = sTime.minute.toString().padLeft(2, '0');
+    String eHour = eTime.hour.toString().padLeft(2, '0');
+    String eMinute = eTime.minute.toString().padLeft(2, '0');
+    sTimeDate = "${date.year}-$month-$day $sHour:$sMinute";
+    eTimeDate = "${date.year}-$month-$day $eHour:$eMinute";
     return DefaultTabController(
         length: 4,
         child: Scaffold(
@@ -23,6 +41,96 @@ class _OrdersState extends State<Orders> {
               leading: Container(),
               backgroundColor: Colors.white,
               elevation: 0,
+              actions: [
+                InkWell(
+                  onTap: () async {
+                    TimeOfDay? newTime = await showTimePicker(
+                        context: context, initialTime: sTime);
+                    if (newTime == null) return;
+                    setState(() {
+                      sTime = newTime;
+                    });
+                  },
+                  child: Text(
+                    "$sHour:$sMinute",
+                    style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600,
+                        color: secondaryColor),
+                  ),
+                ),
+                const Icon(
+                  Icons.access_time_sharp,
+                  color: primaryColor,
+                ),
+                const Text(
+                  "to",
+                  style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w600,
+                      color: secondaryColor),
+                ),
+                InkWell(
+                  onTap: () async {
+                    TimeOfDay? newTime = await showTimePicker(
+                        context: context, initialTime: eTime);
+                    if (newTime == null) return;
+                    setState(() {
+                      eTime = newTime;
+                    });
+                  },
+                  child: Text(
+                    "$eHour:$eMinute",
+                    style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600,
+                        color: secondaryColor),
+                  ),
+                ),
+                const Icon(
+                  Icons.access_time_sharp,
+                  color: primaryColor,
+                ),
+                InkWell(
+                  onTap: () async {
+                    DateTime? newDate = await showDatePicker(
+                        context: context,
+                        initialDate: date,
+                        firstDate: DateTime(1900),
+                        lastDate: DateTime(2100));
+                    if (newDate == null) return;
+                    setState(() {
+                      date = newDate;
+                    });
+                  },
+                  child: Text("${date.year}/$month/$day",
+                      style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w600,
+                          color: secondaryColor)),
+                ),
+                const Icon(
+                  Icons.calendar_month,
+                  color: primaryColor,
+                ),
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      defaultMode = false;
+                    });
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: secondaryColor,
+                        borderRadius: BorderRadius.circular(10)),
+                    padding: const EdgeInsets.all(10),
+                    child: const Text(
+                      "Filter",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+              ],
               bottom: const TabBar(
                   labelColor: primaryColor,
                   indicatorColor: secondaryColor,
@@ -44,7 +152,10 @@ class _OrdersState extends State<Orders> {
             ),
             body: TabBarView(children: [
               StreamBuilder<List<Book>>(
-                stream: FireService.getBooks(),
+                stream: FireService.getBooks(
+                    sTime: Timestamp.fromDate(DateTime.parse(sTimeDate!)),
+                    eTime: Timestamp.fromDate(DateTime.parse(eTimeDate!)),
+                    mode: defaultMode),
                 builder: (context, snapshot) {
                   switch (snapshot.connectionState) {
                     case ConnectionState.waiting:
@@ -325,41 +436,6 @@ class _OrdersState extends State<Orders> {
                                 );
                               },
                             );
-
-                            // switch (snapshot.connectionState) {
-                            //   case ConnectionState.waiting:
-                            //     return const Center(
-                            //         child: SpinKitWave(
-                            //       color: secondaryColor,
-                            //       size: 25.0,
-                            //     ));
-
-                            //   default:
-                            //     if (snapshot.hasError) {
-                            //       return Center(
-                            //           child: Text('Error: ${snapshot.error}'));
-                            //     } else {
-                            //       if (snapshot.data == null) {
-                            //         return const Text('No data to show');
-                            //       } else {
-                            //         final bookCleaners = snapshot.data!;
-
-                            //         return ListView.builder(
-                            //           controller: ScrollController(),
-                            //           itemCount: bookCleaners.length,
-                            //           itemBuilder:
-                            //               (BuildContext context, int index) {
-                            //             return ListTile(
-                            //               title: Text(
-                            //                   bookCleaners[index].cleanerName),
-                            //               trailing: const Icon(
-                            //                   Icons.add_box_outlined),
-                            //             );
-                            //           },
-                            //         );
-                            //       }
-                            //     }
-                            // }
                           }),
                     ),
                     InkWell(
@@ -495,7 +571,6 @@ class _OrdersState extends State<Orders> {
                                 title: Text(cleaner[index].cleanerName),
                                 subtitle: Text(cleaner[index].serviceName),
                                 trailing: IconButton(
-                                    
                                     onPressed: () {
                                       FireService.updateBookCleaner(
                                           bookingId: bookId,
