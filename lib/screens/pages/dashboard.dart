@@ -76,8 +76,8 @@ class _DashboardState extends State<Dashboard> {
                 Row(
                   children: [
                     compOrder('Orders', 'img/img_5.png', 10, context),
-                    comp('Daily Income', 'img/img_5.png', 12, context),
-                    comp('Monthly Income', 'img/img_5.png', 24, context),
+                    comp('Daily Income', 'img/img_5.png', 120, context),
+                    comp('Monthly Income', 'img/img_5.png', 2400, context),
                   ],
                 ),
               ],
@@ -91,9 +91,6 @@ compOrder(var title, var icon, var count, context) {
   return Padding(
     padding: const EdgeInsets.only(left: 31.0, top: 40.0, right: 4.0),
     child: InkWell(
-      onTap: () {
-        Provider.of<PageModel>(context, listen: false).currentPage(5);
-      },
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -173,9 +170,6 @@ comp(var title, var icon, var count, context) {
   return Padding(
     padding: const EdgeInsets.only(left: 31.0, top: 40.0, right: 4.0),
     child: InkWell(
-      onTap: () {
-        Provider.of<PageModel>(context, listen: false).currentPage(5);
-      },
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -190,16 +184,28 @@ comp(var title, var icon, var count, context) {
           ],
         ),
         height: 160,
-        width: 250,
+        width: 270,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Padding(
               padding: const EdgeInsets.only(top: 22.0, left: 30.0),
-              child: Text(
-                title,
-                style: const TextStyle(fontSize: 18, color: Color(0xFF7D7D7D)),
+              child: Row(
+                children: [
+                  Text(
+                    title,
+                    style:
+                        const TextStyle(fontSize: 18, color: Color(0xFF7D7D7D)),
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Icon(
+                    Icons.description_outlined,
+                    color: Colors.amber[200],
+                  )
+                ],
               ),
             ),
             Row(
@@ -208,27 +214,42 @@ comp(var title, var icon, var count, context) {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 30, top: 15),
-                  child: Text(
-                    count.toString(),
-                    style: const TextStyle(
-                        fontSize: 65,
-                        fontWeight: FontWeight.w700,
-                        color: primaryColor),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 70, top: 15),
-                  child: Container(
-                    height: 50,
-                    width: 50,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage(icon),
-                        fit: BoxFit.cover,
-                      ),
+                  // child: Text(
+                  //   "$count.00 AED",
+                  //   style: const TextStyle(
+                  //       fontSize: 65,
+                  //       fontWeight: FontWeight.w700,
+                  //       color: primaryColor),
+                  // ),
+                  child: RichText(
+                    text: TextSpan(
+                      text: '$count.00',
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 52,
+                          color: primaryColor),
+                      children: const <TextSpan>[
+                        TextSpan(
+                            text: 'AED',
+                            style: TextStyle(
+                                fontSize: 20, color: Colors.redAccent)),
+                      ],
                     ),
                   ),
-                )
+                ),
+                // Padding(
+                //   padding: const EdgeInsets.only(left: 70, top: 15),
+                //   child: Container(
+                //     height: 50,
+                //     width: 50,
+                //     decoration: BoxDecoration(
+                //       image: DecorationImage(
+                //         image: AssetImage(icon),
+                //         fit: BoxFit.cover,
+                //       ),
+                //     ),
+                //   ),
+                // )
               ],
             ),
           ],

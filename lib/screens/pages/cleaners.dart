@@ -2,6 +2,7 @@ import 'package:clean_admin/components/constants.dart';
 import 'package:clean_admin/models/cleaner.dart';
 import 'package:clean_admin/services/fire_services.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class Cleaners extends StatefulWidget {
   const Cleaners({Key? key}) : super(key: key);
@@ -169,11 +170,13 @@ class _CleanersState extends State<Cleaners> {
                         itemBuilder: (BuildContext context, int index) {
                           final cleaner = snapshot.data![index];
                           return CleanerItem(
-                              name: cleaner.cleanerName,
-                              address: cleaner.cleanerAddress,
-                              service: cleaner.serviceName,
-                              mobileNo: cleaner.cleanerMobile,
-                              status: cleaner.status!);
+                            name: cleaner.cleanerName,
+                            address: cleaner.cleanerAddress,
+                            service: cleaner.serviceName,
+                            mobileNo: cleaner.cleanerMobile,
+                            status: cleaner.status!,
+                            feedback: cleaner.feedback!,
+                          );
                         },
                       );
                     }
@@ -189,12 +192,14 @@ class CleanerItem extends StatelessWidget {
   final String mobileNo;
   final String service;
   final bool status;
+  final double feedback;
   const CleanerItem({
     required this.name,
     required this.address,
     required this.service,
     required this.mobileNo,
     required this.status,
+    required this.feedback,
     Key? key,
   }) : super(key: key);
 
@@ -230,6 +235,26 @@ class CleanerItem extends StatelessWidget {
                     color: secondaryColor,
                   ),
                 ),
+                const SizedBox(
+                  height: 5,
+                ),
+                RatingBar.builder(
+                  initialRating: feedback,
+                  minRating: 1,
+                  direction: Axis.horizontal,
+                  allowHalfRating: true,
+                  itemCount: 5,
+                  itemSize: 30,
+                  ignoreGestures: true,
+                  itemPadding: const EdgeInsets.only(right: 4.0),
+                  itemBuilder: (context, _) => const Icon(
+                    Icons.star,
+                    color: Colors.amber,
+                  ),
+                  onRatingUpdate: (rating) {
+                    print(rating);
+                  },
+                )
               ],
             ),
             Column(

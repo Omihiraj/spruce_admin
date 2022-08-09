@@ -34,6 +34,7 @@ class Cleaner {
         "address": cleanerAddress,
         "mobile": cleanerMobile,
         "status": true,
-        "current-booking-id": null
+        "current-booking-id": null,
+        "feedback": 1
       };
 }
