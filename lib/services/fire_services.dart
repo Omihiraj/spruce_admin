@@ -172,6 +172,12 @@ class FireService {
       .snapshots()
       .map((snapshot) =>
           snapshot.docs.map((doc) => Book.fromJson(doc.data())).toList());
+  static Stream<List<Book>> getPaid() => FirebaseFirestore.instance
+      .collection("booking")
+      .where("status", whereIn: [3, 4])
+      .snapshots()
+      .map((snapshot) =>
+          snapshot.docs.map((doc) => Book.fromJson(doc.data())).toList());
 
   static UploadTask? uploadImage(String destination, Uint8List file) {
     try {
@@ -313,4 +319,33 @@ class FireService {
         .then((value) => print("Added Success"))
         .catchError((error) => print("Failed to update user: $error"));
   }
+
+  static Stream<List<Book>> getBookCount(
+          {required int sYear,
+          required int sMonth,
+          required int sDay,
+          required int eYear,
+          required int eMonth,
+          required int eDay}) =>
+      FirebaseFirestore.instance
+          .collection("booking")
+          .where('date', isGreaterThan: DateTime(sYear, sMonth, sDay))
+          .where('date', isLessThan: DateTime(eYear, eMonth, eDay + 1))
+          .snapshots()
+          .map((snapshot) =>
+              snapshot.docs.map((doc) => Book.fromJson(doc.data())).toList());
+  static Stream<List<Book>> getMonthBookCount(
+          {required int sYear,
+          required int sMonth,
+          required int sDay,
+          required int eYear,
+          required int eMonth,
+          required int eDay}) =>
+      FirebaseFirestore.instance
+          .collection("booking")
+          .where('date', isGreaterThan: DateTime(sYear, sMonth))
+          .where('date', isLessThan: DateTime(eYear, eMonth + 1))
+          .snapshots()
+          .map((snapshot) =>
+              snapshot.docs.map((doc) => Book.fromJson(doc.data())).toList());
 }
